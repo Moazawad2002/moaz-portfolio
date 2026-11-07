@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="ts1-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070c18"/>
+      <stop offset="100%" stop-color="#020409"/>
+    </linearGradient>
+    <linearGradient id="ts1-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="ts1-left" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="ts1-right" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Container -->
+  <rect width="100" height="100" rx="22" fill="url(#ts1-bg)"/>
+  <rect x="2" y="2" width="96" height="96" rx="20" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Isometric Hex-Cube Tech Shape -->
+  <g transform="translate(0, 0)">
+    <!-- Top Isometric Surface (Valley of M) -->
+    <polygon points="50,16 80,33 50,50 20,33" fill="url(#ts1-top)"/>
+    <!-- Left Facet (Left M-Wing) -->
+    <polygon points="20,33 50,50 50,84 20,67" fill="url(#ts1-left)"/>
+    <!-- Right Facet (Right M-Wing) -->
+    <polygon points="50,50 80,33 80,67 50,84" fill="url(#ts1-right)"/>
+
+    <!-- Inner Floating Tech Apex 'A' (Precision Negative Inset) -->
+    <polygon points="50,28 35,66 65,66" fill="#070c18" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Crossbar of A -->
+    <line x1="40" y1="54" x2="60" y2="54" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Core Micro-Node -->
+    <circle cx="50" cy="44" r="2.5" fill="#38bdf8"/>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="g4-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#100b1e"/>
+      <stop offset="100%" stop-color="#06030b"/>
+    </linearGradient>
+    <linearGradient id="g4-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="50%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="24" fill="url(#g4-bg)"/>
+  <rect x="2" y="2" width="96" height="96" rx="22" fill="none" stroke="url(#g4-grad)" stroke-width="1.8" stroke-opacity="0.4"/>
+  <!-- Code-Bracket & Forward Alpha A -->
+  <g fill="none" stroke="url(#g4-grad)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left Bracket < / M's left wing -->
+    <path d="M36 30 L22 50 L36 70"/>
+    <!-- Center Vertical / Cross-Axis -->
+    <path d="M50 24 L50 76" stroke-width="5"/>
+    <!-- Right Bracket > / M's right wing -->
+    <path d="M64 30 L78 50 L64 70"/>
+    <!-- Alpha Chevron Cross connecting to create A -->
+    <path d="M34 50 L50 32 L66 50" stroke="#38bdf8" stroke-width="5.5"/>
+    <line x1="40" y1="56" x2="60" y2="56" stroke="#38bdf8" stroke-width="4.5"/>
+  </g>
+</svg>

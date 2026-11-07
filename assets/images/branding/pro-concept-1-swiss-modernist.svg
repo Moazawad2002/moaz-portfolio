@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Executive Clean Slate Backdrop -->
+  <rect width="100" height="100" rx="22" fill="#0c111d"/>
+  <rect x="2" y="2" width="96" height="96" rx="20" fill="none" stroke="#1f293d" stroke-width="1.5"/>
+  
+  <!-- Geometric Swiss M and A -->
+  <!-- M -->
+  <path d="M18 72 L18 28 L34 52 L50 28 L50 72" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- A -->
+  <path d="M56 72 L72 28 L88 72" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Refined Precision Crossbar -->
+  <line x1="62" y1="56" x2="82" y2="56" stroke="#10b981" stroke-width="6.5" stroke-linecap="round"/>
+</svg>
