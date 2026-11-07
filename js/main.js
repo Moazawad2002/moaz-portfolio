@@ -118,7 +118,7 @@ const PROJECTS_DATA = {
     title: 'Enterprise Multi-Branch Desktop ERP & Backend',
     type: 'Multi-Branch Architecture & Analytics Engine',
     tag: 'Desktop Systems',
-    image: 'assets/images/al-amal-preview.svg',
+    image: 'assets/images/egypt-erp-preview.svg',
     github: 'https://github.com/Moazawad2002/egypt-distribution-erp',
     overview: 'Full-stack multi-branch ERP system connecting Cairo, Alexandria, and Mansoura operations through authenticated REST APIs and PostgreSQL 16 Enterprise.',
     problem: 'Fast-growing Egyptian distributors with multiple regional branches face data fragmentation, cross-branch data corruption, and financial rounding discrepancies when operations are not strictly scoped at the server level.',
