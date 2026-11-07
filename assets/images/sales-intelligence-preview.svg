@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="xlBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f1f18"/>
+      <stop offset="100%" stop-color="#070f0b"/>
+    </linearGradient>
+    <linearGradient id="xlCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#142c22"/>
+      <stop offset="100%" stop-color="#0e1f18"/>
+    </linearGradient>
+    <linearGradient id="greenBar" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#xlBg)"/>
+
+  <!-- Excel Ribbon Bar -->
+  <rect x="25" y="18" width="750" height="42" rx="8" fill="#133827" stroke="#1f543c" stroke-width="1"/>
+  <rect x="38" y="28" width="22" height="22" rx="4" fill="#107c41"/>
+  <text x="49" y="44" fill="#ffffff" font-family="system-ui, sans-serif" font-size="13" font-weight="900" text-anchor="middle">X</text>
+  <text x="70" y="44" fill="#e2f5ec" font-family="system-ui, sans-serif" font-size="12.5" font-weight="700">Premium Sales Intelligence &amp; Revenue Operations Dashboard — Microsoft Excel Business Analytics</text>
+  <rect x="665" y="28" width="95" height="22" rx="4" fill="#107c41" fill-opacity="0.3" stroke="#107c41"/>
+  <text x="712" y="43" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="middle">POWER QUERY</text>
+
+  <!-- Top Executive KPI Ribbon -->
+  <g transform="translate(25, 70)">
+    <!-- KPI 1 -->
+    <rect x="0" y="0" width="175" height="80" rx="8" fill="url(#xlCard)" stroke="#1f543c"/>
+    <text x="16" y="22" fill="#86efac" font-family="system-ui, sans-serif" font-size="10.5" font-weight="700">TOTAL REVENUE (YTD)</text>
+    <text x="16" y="52" fill="#ffffff" font-family="system-ui, sans-serif" font-size="20" font-weight="800">4,820,950 ج.م</text>
+    <text x="16" y="68" fill="#34d399" font-family="system-ui, sans-serif" font-size="10" font-weight="600">▲ +18.4% vs Last Year</text>
+
+    <!-- KPI 2 -->
+    <rect x="190" y="0" width="175" height="80" rx="8" fill="url(#xlCard)" stroke="#1f543c"/>
+    <text x="206" y="22" fill="#86efac" font-family="system-ui, sans-serif" font-size="10.5" font-weight="700">GROSS MARGIN %</text>
+    <text x="206" y="52" fill="#ffffff" font-family="system-ui, sans-serif" font-size="20" font-weight="800">24.8%</text>
+    <text x="206" y="68" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="10">Target: 22.0% (+2.8% Spread)</text>
+
+    <!-- KPI 3 -->
+    <rect x="380" y="0" width="175" height="80" rx="8" fill="url(#xlCard)" stroke="#1f543c"/>
+    <text x="396" y="22" fill="#86efac" font-family="system-ui, sans-serif" font-size="10.5" font-weight="700">AVG INVOICE TICKET</text>
+    <text x="396" y="52" fill="#ffffff" font-family="system-ui, sans-serif" font-size="20" font-weight="800">32,450 ج.م</text>
+    <text x="396" y="68" fill="#f59e0b" font-family="system-ui, sans-serif" font-size="10">148 Transactions / Month</text>
+
+    <!-- KPI 4 -->
+    <rect x="570" y="0" width="180" height="80" rx="8" fill="url(#xlCard)" stroke="#1f543c"/>
+    <text x="586" y="22" fill="#86efac" font-family="system-ui, sans-serif" font-size="10.5" font-weight="700">DSO (DAYS SALES OUTSTANDING)</text>
+    <text x="586" y="52" fill="#ffffff" font-family="system-ui, sans-serif" font-size="20" font-weight="800">26.4 DAYS</text>
+    <text x="586" y="68" fill="#34d399" font-family="system-ui, sans-serif" font-size="10">Benchmark: &lt; 30 Days (Healthy)</text>
+  </g>
+
+  <!-- Left: Dynamic Slicers & Cohort Filters -->
+  <g transform="translate(25, 160)">
+    <rect x="0" y="0" width="175" height="315" rx="8" fill="url(#xlCard)" stroke="#1f543c"/>
+    <text x="15" y="24" fill="#a7f3d0" font-family="system-ui, sans-serif" font-size="11" font-weight="700">EXCEL DYNAMIC SLICERS</text>
+    
+    <!-- Slicer: Region / Branch -->
+    <text x="15" y="48" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="9.5" font-weight="600">DISTRIBUTION REGION</text>
+    <rect x="15" y="55" width="145" height="24" rx="4" fill="#107c41"/>
+    <text x="25" y="71" fill="#ffffff" font-family="system-ui, sans-serif" font-size="10" font-weight="700">All Regions (Consolidated)</text>
+    <rect x="15" y="82" width="145" height="22" rx="4" fill="#0c1d14"/>
+    <text x="25" y="97" fill="#86efac" font-family="system-ui, sans-serif" font-size="9.5">Greater Cairo Metro</text>
+    <rect x="15" y="107" width="145" height="22" rx="4" fill="#0c1d14"/>
+    <text x="25" y="122" fill="#86efac" font-family="system-ui, sans-serif" font-size="9.5">Alexandria Coastal</text>
+    <rect x="15" y="132" width="145" height="22" rx="4" fill="#0c1d14"/>
+    <text x="25" y="147" fill="#86efac" font-family="system-ui, sans-serif" font-size="9.5">Delta &amp; Canal Zone</text>
+
+    <!-- Slicer: Category -->
+    <text x="15" y="178" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="9.5" font-weight="600">PRODUCT CLASSIFICATION</text>
+    <rect x="15" y="185" width="145" height="24" rx="4" fill="#107c41"/>
+    <text x="25" y="201" fill="#ffffff" font-family="system-ui, sans-serif" font-size="10" font-weight="700">Dairy &amp; Chilled Goods</text>
+    <rect x="15" y="212" width="145" height="22" rx="4" fill="#0c1d14"/>
+    <text x="25" y="227" fill="#86efac" font-family="system-ui, sans-serif" font-size="9.5">Dry Groceries &amp; Grains</text>
+    <rect x="15" y="237" width="145" height="22" rx="4" fill="#0c1d14"/>
+    <text x="25" y="252" fill="#86efac" font-family="system-ui, sans-serif" font-size="9.5">Beverages &amp; Juices</text>
+
+    <!-- Tech specs box -->
+    <rect x="15" y="270" width="145" height="35" rx="4" fill="#07140e" stroke="#1f543c"/>
+    <text x="22" y="285" fill="#38bdf8" font-family="monospace" font-size="8.5">Dynamic Arrays + DAX</text>
+    <text x="22" y="297" fill="#64748b" font-family="system-ui, sans-serif" font-size="8">Zero Manual Copy-Paste</text>
+  </g>
+
+  <!-- Mid: Revenue & Margin Analytics Chart -->
+  <g transform="translate(215, 160)">
+    <rect x="0" y="0" width="345" height="315" rx="8" fill="url(#xlCard)" stroke="#1f543c"/>
+    <text x="18" y="26" fill="#ffffff" font-family="system-ui, sans-serif" font-size="13" font-weight="700">Monthly Revenue vs. Gross Margin %</text>
+    <text x="18" y="42" fill="#86efac" font-family="system-ui, sans-serif" font-size="9.5">Actual vs Target Performance (Jan – Oct 2026)</text>
+
+    <!-- Chart Grid -->
+    <line x1="40" y1="230" x2="320" y2="230" stroke="#1f543c" stroke-width="1"/>
+    <line x1="40" y1="180" x2="320" y2="180" stroke="#1f543c" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="40" y1="130" x2="320" y2="130" stroke="#1f543c" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="40" y1="80" x2="320" y2="80" stroke="#1f543c" stroke-width="1" stroke-dasharray="3,3"/>
+
+    <!-- Revenue Bars -->
+    <!-- Jan -->
+    <rect x="55" y="150" width="20" height="80" rx="3" fill="url(#greenBar)"/>
+    <text x="65" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">Jan</text>
+    <!-- Feb -->
+    <rect x="85" y="135" width="20" height="95" rx="3" fill="url(#greenBar)"/>
+    <text x="95" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">Feb</text>
+    <!-- Mar -->
+    <rect x="115" y="120" width="20" height="110" rx="3" fill="url(#greenBar)"/>
+    <text x="125" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">Mar</text>
+    <!-- Apr -->
+    <rect x="145" y="140" width="20" height="90" rx="3" fill="url(#greenBar)"/>
+    <text x="155" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">Apr</text>
+    <!-- May -->
+    <rect x="175" y="110" width="20" height="120" rx="3" fill="url(#greenBar)"/>
+    <text x="185" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">May</text>
+    <!-- Jun -->
+    <rect x="205" y="95" width="20" height="135" rx="3" fill="url(#greenBar)"/>
+    <text x="215" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">Jun</text>
+    <!-- Jul -->
+    <rect x="235" y="85" width="20" height="145" rx="3" fill="url(#greenBar)"/>
+    <text x="245" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">Jul</text>
+    <!-- Aug -->
+    <rect x="265" y="70" width="20" height="160" rx="3" fill="url(#greenBar)"/>
+    <text x="275" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">Aug</text>
+    <!-- Sep -->
+    <rect x="295" y="65" width="20" height="165" rx="3" fill="#38bdf8"/>
+    <text x="305" y="245" fill="#86efac" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">Sep</text>
+
+    <!-- Margin % Line overlay -->
+    <polyline points="65,160 95,145 125,130 155,140 185,120 215,105 245,95 275,80 305,75" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+    <circle cx="305" cy="75" r="4" fill="#f59e0b"/>
+
+    <!-- Legend -->
+    <rect x="35" y="270" width="10" height="10" rx="2" fill="#10b981"/>
+    <text x="50" y="279" fill="#e2f5ec" font-family="system-ui, sans-serif" font-size="9.5">Net Invoiced Revenue</text>
+    <line x1="170" y1="275" x2="190" y2="275" stroke="#f59e0b" stroke-width="2.5"/>
+    <circle cx="180" cy="275" r="3" fill="#f59e0b"/>
+    <text x="195" y="279" fill="#e2f5ec" font-family="system-ui, sans-serif" font-size="9.5">Gross Margin Trend (%)</text>
+  </g>
+
+  <!-- Right: Receivables Aging & Pareto -->
+  <g transform="translate(575, 160)">
+    <rect x="0" y="0" width="200" height="315" rx="8" fill="url(#xlCard)" stroke="#1f543c"/>
+    <text x="15" y="24" fill="#ffffff" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700">Receivables Aging &amp; Risk</text>
+    <text x="15" y="38" fill="#86efac" font-family="system-ui, sans-serif" font-size="9">Overdue Collections Analysis</text>
+
+    <!-- Aging Bucket 1: 0-30 days -->
+    <g transform="translate(15, 55)">
+      <text x="0" y="12" fill="#e2f5ec" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Current (0-30 Days)</text>
+      <text x="170" y="12" fill="#34d399" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="end">72.4%</text>
+      <rect x="0" y="18" width="170" height="8" rx="3" fill="#071b12"/>
+      <rect x="0" y="18" width="123" height="8" rx="3" fill="#10b981"/>
+    </g>
+
+    <!-- Aging Bucket 2: 31-60 days -->
+    <g transform="translate(15, 95)">
+      <text x="0" y="12" fill="#e2f5ec" font-family="system-ui, sans-serif" font-size="10" font-weight="600">31-60 Days Overdue</text>
+      <text x="170" y="12" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="end">18.2%</text>
+      <rect x="0" y="18" width="170" height="8" rx="3" fill="#071b12"/>
+      <rect x="0" y="18" width="31" height="8" rx="3" fill="#38bdf8"/>
+    </g>
+
+    <!-- Aging Bucket 3: 61-90 days -->
+    <g transform="translate(15, 135)">
+      <text x="0" y="12" fill="#e2f5ec" font-family="system-ui, sans-serif" font-size="10" font-weight="600">61-90 Days Overdue</text>
+      <text x="170" y="12" fill="#f59e0b" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="end">6.8%</text>
+      <rect x="0" y="18" width="170" height="8" rx="3" fill="#071b12"/>
+      <rect x="0" y="18" width="12" height="8" rx="3" fill="#f59e0b"/>
+    </g>
+
+    <!-- Aging Bucket 4: >90 days -->
+    <g transform="translate(15, 175)">
+      <text x="0" y="12" fill="#e2f5ec" font-family="system-ui, sans-serif" font-size="10" font-weight="600">&gt; 90 Days (Bad Debt Risk)</text>
+      <text x="170" y="12" fill="#ef4444" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="end">2.6%</text>
+      <rect x="0" y="18" width="170" height="8" rx="3" fill="#071b12"/>
+      <rect x="0" y="18" width="5" height="8" rx="3" fill="#ef4444"/>
+    </g>
+
+    <!-- Bottom summary -->
+    <g transform="translate(15, 230)">
+      <rect x="0" y="0" width="170" height="70" rx="6" fill="#081710" stroke="#1f543c"/>
+      <text x="10" y="20" fill="#a7f3d0" font-family="system-ui, sans-serif" font-size="10" font-weight="700">Pareto (80/20) Insights</text>
+      <text x="10" y="38" fill="#86efac" font-family="system-ui, sans-serif" font-size="8.5">• Top 12 SKUs drive 78.4% of margin</text>
+      <text x="10" y="52" fill="#86efac" font-family="system-ui, sans-serif" font-size="8.5">• 5 Wholesale grocers = 62% volume</text>
+    </g>
+  </g>
+</svg>
