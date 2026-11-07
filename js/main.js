@@ -19,6 +19,10 @@ const PROJECTS_DATA = {
     type: 'Enterprise B2B Web ERP',
     tag: 'Web & Cloud ERP',
     image: 'assets/images/al-ofok-screenshot.png',
+    gallery: [
+      'assets/images/al-ofok-screenshot.png',
+      'assets/screenshots/al-ofok/02-sales-orders-and-invoices.png'
+    ],
     logo: 'assets/images/al-ofok-logo.jpg',
     demo: 'https://al-ofok-food-distribution.vercel.app/',
     github: 'https://github.com/Moazawad2002/al-ofok-food-distribution',
@@ -39,8 +43,17 @@ const PROJECTS_DATA = {
     title: 'Al Amal Distribution Management System (Desktop ERP)',
     type: 'Enterprise Windows Desktop App',
     tag: 'Desktop Systems',
-    image: 'assets/images/al-amal-preview.svg',
+    image: 'assets/screenshots/al-amal/01-ceo-executive-dashboard.png',
+    gallery: [
+      'assets/screenshots/al-amal/01-ceo-executive-dashboard.png',
+      'assets/screenshots/al-amal/02-rep-route-isolated-dashboard.png',
+      'assets/screenshots/al-amal/03-customers-credit-governance.png',
+      'assets/screenshots/al-amal/04-products-inventory-catalog.png',
+      'assets/screenshots/al-amal/05-sales-invoicing-management.png',
+      'assets/screenshots/al-amal/06-reports-and-profit-analytics.png'
+    ],
     logo: 'assets/images/al-amal-logo.png',
+    demo: 'demos/al-amal-erp/index.html',
     github: 'https://github.com/Moazawad2002/al-amal-desktop',
     overview: 'Native Windows desktop ERP application with dedicated role-based interfaces for executive management and field sales representatives.',
     problem: 'Food distributors require desktop-grade offline reliability, fast transaction entry, and ironclad security ensuring field representatives only see their assigned territory while executives maintain company-wide consolidated auditability.',
@@ -59,8 +72,14 @@ const PROJECTS_DATA = {
     title: 'Google Apps Script Distribution Management System',
     type: 'Cloud-Native Serverless DMS',
     tag: 'Web & Cloud ERP',
-    image: 'assets/images/al-amal-dms-preview.svg',
+    image: 'assets/screenshots/dms/01-gas-engine-architecture.svg',
+    gallery: [
+      'assets/screenshots/dms/01-gas-engine-architecture.svg',
+      'assets/screenshots/dms/02-relational-sheets-schema.svg'
+    ],
     logo: 'assets/images/al-amal-logo.png',
+    demo: 'https://github.com/Moazawad2002/al-amal-dms',
+    demoText: 'View Architecture & Code ↗',
     github: 'https://github.com/Moazawad2002/al-amal-dms',
     overview: 'Zero-infrastructure cloud distribution ERP built directly on Google Workspace, combining Google Sheets as a relational database with modular Apps Script backends.',
     problem: 'SMEs in Egypt often cannot afford expensive ERP recurring licenses or complex cloud hosting, yet require structured financial governance, document generation, and multi-user controls.',
@@ -79,7 +98,16 @@ const PROJECTS_DATA = {
     title: 'Premium Sales Intelligence Dashboard – Excel',
     type: 'Executive Business Intelligence & Financial Model',
     tag: 'Analytics & Excel',
-    image: 'assets/images/project1-screenshot.png',
+    image: 'assets/screenshots/excel/01-executive-dashboard-overview.png',
+    gallery: [
+      'assets/images/sales-dashboard_excel.gif',
+      'assets/screenshots/excel/01-executive-dashboard-overview.png',
+      'assets/screenshots/excel/02-kpi-summary-insights.png',
+      'assets/screenshots/excel/03-analytical-charts-suite.png',
+      'assets/screenshots/excel/04-slicer-drilldown-state.png'
+    ],
+    demo: 'https://www.fiverr.com/s/VrD0ogx',
+    demoText: 'Request a Custom Dashboard ↗',
     github: 'https://github.com/Moazawad2002/premium-sales-intelligence-dashboard',
     overview: 'Advanced Excel analytics engine and dynamic executive dashboard designed for C-level visibility into FMCG distribution performance.',
     problem: 'Executive leaders spent days manually compiling fragmented sales spreadsheets, creating severe lag in identifying margin erosion, lagging product categories, and overdue customer debts.',
@@ -98,7 +126,13 @@ const PROJECTS_DATA = {
     title: 'Sales Executive Performance Dashboard',
     type: 'Operational Quota Tracking & Commission System',
     tag: 'Analytics & Excel',
-    image: 'assets/images/project5-screenshot.png',
+    image: 'assets/screenshots/sales-executive/02-executive-performance-overview.png',
+    gallery: [
+      'assets/screenshots/sales-executive/01-multi-branch-login-personas.png',
+      'assets/screenshots/sales-executive/02-executive-performance-overview.png',
+      'assets/screenshots/sales-executive/03-branch-profitability-leaderboard.png',
+      'assets/screenshots/sales-executive/04-monthly-trend-regional-share.png'
+    ],
     demo: 'https://moazawad2002.github.io/sales-executive-dashboard/',
     github: 'https://github.com/Moazawad2002/sales-executive-dashboard',
     overview: 'Field sales performance analytics system tracking rep quota attainment against corporate revenue targets (e.g. 3,190,000 EGP monthly targets across 3 regional branches).',
@@ -118,7 +152,12 @@ const PROJECTS_DATA = {
     title: 'Enterprise Multi-Branch Desktop ERP & Backend',
     type: 'Multi-Branch Architecture & Analytics Engine',
     tag: 'Desktop Systems',
-    image: 'assets/images/egypt-erp-preview.svg',
+    image: 'assets/screenshots/egypt-erp/01-multi-branch-executive-console.svg',
+    gallery: [
+      'assets/screenshots/egypt-erp/01-multi-branch-executive-console.svg',
+      'assets/screenshots/egypt-erp/02-system-architecture-topology.svg'
+    ],
+    demo: 'demos/egypt-multi-branch-erp/index.html',
     github: 'https://github.com/Moazawad2002/egypt-distribution-erp',
     overview: 'Full-stack multi-branch ERP system connecting Cairo, Alexandria, and Mansoura operations through authenticated REST APIs and PostgreSQL 16 Enterprise.',
     problem: 'Fast-growing Egyptian distributors with multiple regional branches face data fragmentation, cross-branch data corruption, and financial rounding discrepancies when operations are not strictly scoped at the server level.',
@@ -240,6 +279,31 @@ function initProjectDataAndModals() {
       modalType.textContent = data.nature + ' • ' + data.type;
       modalImage.src = data.image;
       modalImage.alt = data.title;
+
+      // Render gallery strip
+      const modalGalleryStrip = document.getElementById('modal-gallery-strip');
+      if (modalGalleryStrip) {
+        modalGalleryStrip.innerHTML = '';
+        const gallery = data.gallery || [data.image];
+        if (gallery.length > 1) {
+          modalGalleryStrip.style.display = 'flex';
+          gallery.forEach((imgSrc, idx) => {
+            const thumb = document.createElement('img');
+            thumb.src = imgSrc;
+            thumb.className = 'modal-gallery-thumb' + (idx === 0 ? ' active' : '');
+            thumb.alt = data.title + ' Screenshot ' + (idx + 1);
+            thumb.addEventListener('click', () => {
+              modalImage.src = imgSrc;
+              modalGalleryStrip.querySelectorAll('.modal-gallery-thumb').forEach(t => t.classList.remove('active'));
+              thumb.classList.add('active');
+            });
+            modalGalleryStrip.appendChild(thumb);
+          });
+        } else {
+          modalGalleryStrip.style.display = 'none';
+        }
+      }
+
       modalOverview.textContent = data.overview;
       modalProblem.textContent = data.problem;
       modalSolution.textContent = data.solution;
@@ -278,6 +342,8 @@ function initProjectDataAndModals() {
       if (modalDemoLink) {
         if (data.demo) {
           modalDemoLink.href = data.demo;
+          modalDemoLink.textContent = data.demoText || 'Live Demo ↗';
+          modalDemoLink.removeAttribute('download');
           modalDemoLink.style.display = 'inline-flex';
         } else {
           modalDemoLink.style.display = 'none';

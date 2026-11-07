@@ -81,4 +81,4 @@ Most operational bottlenecks, margin leaks, and inventory discrepancies happen b
 - 🌐 **Portfolio Website:** [moazawad2002.github.io](https://moazawad2002.github.io/)
 - ✉️ **Email:** [moaz14714@gmail.com](mailto:moaz14714@gmail.com)
 - 💼 **LinkedIn:** [moaz-awad-649911376](https://www.linkedin.com/in/moaz-awad-649911376)
-- 🤝 **Fiverr Gigs:** [Excel Dashboards & Analytics](https://www.fiverr.com/s/Bb8WZBW) • [Cloud Automation & ERP](https://www.fiverr.com/s/EmrXZg0)
+- 🤝 **Fiverr Gigs:** [Excel Dashboards & Analytics](https://www.fiverr.com/s/VrD0ogx) • [Cloud Automation & ERP](https://www.fiverr.com/s/EmrXZg0)

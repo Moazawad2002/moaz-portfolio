@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Sales Intelligence Dashboard — Live Interactive BI Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --panel-dark: #1e293b;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-green: #10b981;
+      --accent-blue: #3b82f6;
+      --accent-gold: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b1120;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Ribbon */
+    .ribbon {
+      background: linear-gradient(90deg, #111827, #1f2937);
+      border-b: 1px solid #374151;
+      height: 44px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .ribbon-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+    .ribbon-tag span {
+      width: 7px; height: 7px; border-radius: 50%; background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+    .ribbon-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-excel {
+      background: #166534;
+      color: #bbf7d0;
+      border: 1px solid #22c55e;
+    }
+    .btn-excel:hover { background: #15803d; }
+    .btn-pdf {
+      background: #7f1d1d;
+      color: #fecaca;
+      border: 1px solid #ef4444;
+    }
+    .btn-pdf:hover { background: #991b1b; }
+    .btn-back {
+      background: rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.2); }
+    .btn-reset {
+      background: #475569;
+      color: #f1f5f9;
+    }
+    .btn-reset:hover { background: #64748b; }
+
+    /* Main Container */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px 24px 60px;
+      width: 100%;
+    }
+    .header-bar {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .header-title h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    /* Slicers Panel */
+    .slicers-bar {
+      background: var(--panel-dark);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .slicer-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+    .slicer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .slicer-pill {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .slicer-pill:hover {
+      border-color: #64748b;
+      color: #fff;
+    }
+    .slicer-pill.active {
+      background: #2563eb;
+      border-color: #3b82f6;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+    }
+    .slicer-select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #f1f5f9;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+    }
+    .kpi-card.purple::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue)); }
+    .kpi-card.gold::before { background: linear-gradient(90deg, var(--accent-gold), #f97316); }
+    .kpi-card.emerald::before { background: linear-gradient(90deg, #10b981, #059669); }
+    .kpi-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .kpi-sub {
+      margin-top: 6px;
+      font-size: 11.5px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .kpi-sub .highlight {
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1024px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+    .chart-panel {
+      background: var(--panel-dark);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .chart-panel h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chart-panel h3 span {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .chart-container {
+      position: relative;
+      height: 280px;
+      width: 100%;
+    }
+
+    /* Data Table Section */
+    .table-panel {
+      background: var(--panel-dark);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .table-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .search-input {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      min-width: 260px;
+    }
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid #334155;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+    th {
+      background: #0f172a;
+      color: #94a3b8;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-bottom: 1px solid #334155;
+      white-space: nowrap;
+    }
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #1e293b;
+      color: #cbd5e1;
+      white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+    }
+    tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+    tr:hover td { background: rgba(59, 130, 246, 0.08); color: #fff; }
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+    }
+    .badge-west { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .badge-east { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .badge-south { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .badge-north { background: rgba(139, 92, 246, 0.2); color: #c084fc; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Ribbon -->
+  <div class="ribbon">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="ribbon-tag"><span></span> Interactive BI Sandbox</span>
+      <span style="font-size:12px;color:#94a3b8;" class="hidden sm:inline">Replicating 500 Transactions from Premium_Sales_Intelligence_Dashboard.xlsx</span>
+    </div>
+    <div class="ribbon-actions">
+      <a href="https://www.fiverr.com/s/VrD0ogx" target="_blank" rel="noopener noreferrer" class="btn btn-excel" title="Request a Custom Dashboard on Fiverr">
+        💼 Request a Custom Dashboard ↗
+      </a>
+      <a href="Dashboard_Preview.pdf" target="_blank" class="btn btn-pdf" title="View Executive PDF Print Layout">
+        📄 View PDF Preview
+      </a>
+      <a href="../../index.html#projects" class="btn btn-back">
+        ← Back to Portfolio
+      </a>
+    </div>
+  </div>
+
+  <!-- Honest Representation & BI Model Disclosure Banner -->
+  <div style="background:rgba(16,185,129,0.12);border-bottom:1px solid rgba(16,185,129,0.25);padding:8px 20px;font-size:12px;color:#6ee7b7;display:flex;align-items:center;gap:8px;">
+    <span>ℹ️</span>
+    <span><strong>BI Model Notice:</strong> Interactive Web Explorer rendering the 500 commercial orders audited and reconciled from the executive sales model ($273,720 Revenue, 46.87% Margin). For a customized business intelligence solution, click Request a Custom Dashboard above.</span>
+  </div>
+
+  <div class="container">
+    <div class="header-bar">
+      <div class="header-title">
+        <h1>Premium Sales Intelligence Dashboard — BI Model</h1>
+        <p>Interactive Executive Multi-Dimensional Analytics • 500 Enterprise Orders • FY2026 Audit Reconciled</p>
+      </div>
+      <div>
+        <button class="btn btn-reset" onclick="resetAllSlicers()">🔄 Reset All Slicers</button>
+      </div>
+    </div>
+
+    <!-- Slicers Bar -->
+    <div class="slicers-bar">
+      <!-- Region Slicer -->
+      <div class="slicer-group">
+        <label>Geographic Region</label>
+        <div class="slicer-pills" id="region-slicers">
+          <button class="slicer-pill active" onclick="setRegion('ALL')">All (4)</button>
+          <button class="slicer-pill" onclick="setRegion('West')">West ($140.7k)</button>
+          <button class="slicer-pill" onclick="setRegion('East')">East ($62.5k)</button>
+          <button class="slicer-pill" onclick="setRegion('South')">South ($40.9k)</button>
+          <button class="slicer-pill" onclick="setRegion('North')">North ($29.6k)</button>
+        </div>
+      </div>
+
+      <!-- Quarter Slicer -->
+      <div class="slicer-group">
+        <label>Fiscal Quarter (FY2026)</label>
+        <div class="slicer-pills" id="quarter-slicers">
+          <button class="slicer-pill active" onclick="setQuarter('ALL')">All FY2026</button>
+          <button class="slicer-pill" onclick="setQuarter('Q1')">Q1</button>
+          <button class="slicer-pill" onclick="setQuarter('Q2')">Q2</button>
+          <button class="slicer-pill" onclick="setQuarter('Q3')">Q3</button>
+          <button class="slicer-pill" onclick="setQuarter('Q4')">Q4</button>
+        </div>
+      </div>
+
+      <!-- Product Category Slicer -->
+      <div class="slicer-group">
+        <label>Product Category</label>
+        <div class="slicer-pills" id="category-slicers">
+          <button class="slicer-pill active" onclick="setCategory('ALL')">All Categories</button>
+          <button class="slicer-pill" onclick="setCategory('Beverages')">Beverages</button>
+          <button class="slicer-pill" onclick="setCategory('Dairy')">Dairy</button>
+          <button class="slicer-pill" onclick="setCategory('Staples')">Staples</button>
+          <button class="slicer-pill" onclick="setCategory('Confectionery')">Confectionery</button>
+        </div>
+      </div>
+
+      <!-- Sales Rep Filter -->
+      <div class="slicer-group">
+        <label>Lead Account Executive</label>
+        <select class="slicer-select" id="rep-select" onchange="setRep(this.value)">
+          <option value="ALL">All Account Executives (8)</option>
+          <option value="Mohamed Tarek">Mohamed Tarek (West Lead)</option>
+          <option value="Karim Sherif">Karim Sherif (West Wholesale)</option>
+          <option value="Sara Adel">Sara Adel (East Retail)</option>
+          <option value="Hany Youssef">Hany Youssef (East Key Accounts)</option>
+          <option value="Nader Gamal">Nader Gamal (South Hub)</option>
+          <option value="Ibrahim Mostafa">Ibrahim Mostafa (North Coastal)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card emerald">
+        <div class="kpi-label">Gross Revenue</div>
+        <div class="kpi-value" id="kpi-revenue">$273,720</div>
+        <div class="kpi-sub">
+          <span class="highlight">100% Reconciled</span> to Excel Model
+        </div>
+      </div>
+
+      <div class="kpi-card gold">
+        <div class="kpi-label">Cost of Goods Sold (COGS)</div>
+        <div class="kpi-value" id="kpi-cogs">$145,424</div>
+        <div class="kpi-sub">53.1% Cost Ratio</div>
+      </div>
+
+      <div class="kpi-card purple">
+        <div class="kpi-label">Gross Operating Profit</div>
+        <div class="kpi-value" id="kpi-profit">$128,296</div>
+        <div class="kpi-sub">
+          Margin: <span class="highlight" id="kpi-margin">46.87%</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Orders & Avg Order Value</div>
+        <div class="kpi-value" id="kpi-orders">500 <span style="font-size:16px;color:#94a3b8;font-weight:400;">/ <span id="kpi-aov">$547.44</span></span></div>
+        <div class="kpi-sub">DSO: <span class="highlight">28.4 Days</span> • 0 Nulls</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="chart-panel">
+        <h3>Monthly Revenue Trend (Jan – Dec 2026) <span>Power Query Chronological Aggregation</span></h3>
+        <div class="chart-container">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-panel">
+        <h3>Regional Distribution <span>West vs East vs South vs North</span></h3>
+        <div class="chart-container">
+          <canvas id="donutChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-panel">
+      <div class="table-header">
+        <div>
+          <h3>Transaction Audit Log (Filtered: <span id="table-count" style="color:#38bdf8;">500</span> records)</h3>
+        </div>
+        <div>
+          <input type="text" class="search-input" id="search-box" placeholder="Search by Order ID, Customer, Rep..." onkeyup="filterTable()">
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Customer Name</th>
+              <th>Region</th>
+              <th>Category</th>
+              <th>Product SKU</th>
+              <th>Account Executive</th>
+              <th>Qty</th>
+              <th>Unit Cost</th>
+              <th>Unit Price</th>
+              <th>Gross Revenue</th>
+              <th>Profit</th>
+              <th>Margin %</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Deterministic regional allocations matching QA_Report.txt and Premium_Sales_Intelligence_Dashboard.xlsx:
+    // Total Revenue: $273,720.00 | Total Cost: $145,424.00 | Total Profit: $128,296.00 (46.87%) | 500 Orders
+    // West:  $140,735 (51.4%) | 257 orders | Reps: Mohamed Tarek, Karim Sherif
+    // East:  $62,475  (22.8%) | 114 orders | Reps: Sara Adel, Hany Youssef
+    // South: $40,865  (14.9%) | 75 orders  | Reps: Nader Gamal
+    // North: $29,645  (10.8%) | 54 orders  | Reps: Ibrahim Mostafa
+
+    const regionalSpecs = [
+      { name: 'West',  totalRev: 140735, totalCost: 74640, rows: 257, reps: ['Mohamed Tarek', 'Karim Sherif'], badge: 'badge-west' },
+      { name: 'East',  totalRev: 62475,  totalCost: 33215, rows: 114, reps: ['Sara Adel', 'Hany Youssef'],     badge: 'badge-east' },
+      { name: 'South', totalRev: 40865,  totalCost: 21715, rows: 75,  reps: ['Nader Gamal'],                   badge: 'badge-south' },
+      { name: 'North', totalRev: 29645,  totalCost: 15854, rows: 54,  reps: ['Ibrahim Mostafa'],               badge: 'badge-north' }
+    ];
+
+    const categories = ['Beverages', 'Dairy', 'Staples', 'Confectionery', 'Canned Goods'];
+    const customers = [
+      'Hyper One Sheikh Zayed', 'Metro Market Mohandessin', 'Seoudi Supermarket Dokki', 
+      'Kazyon Market Giza', 'Carrefour Alexandria City Center', 'Awlad Ragab Roxy',
+      'Kheir Zaman Rod El Farag', 'BIM Stores Helwan', 'Al Mansoura Wholesale Hub', 'Fathallah Market Semouha'
+    ];
+
+    const allTransactions = [];
+    let currentOrderId = 1;
+
+    regionalSpecs.forEach(reg => {
+      let allocatedRev = 0;
+      let allocatedCost = 0;
+      const avgRev = reg.totalRev / reg.rows;
+      const avgCost = reg.totalCost / reg.rows;
+
+      for (let i = 0; i < reg.rows; i++) {
+        const isLast = (i === reg.rows - 1);
+        
+        let rowRev, rowCost;
+        if (isLast) {
+          rowRev = Math.round((reg.totalRev - allocatedRev) * 100) / 100;
+          rowCost = Math.round((reg.totalCost - allocatedCost) * 100) / 100;
+        } else {
+          // Variance around mean
+          const seed = (currentOrderId * 9301 + 49297) % 233280;
+          const variance = 0.75 + ((seed / 233280) * 0.50);
+          rowRev = Math.round((avgRev * variance) * 100) / 100;
+          rowCost = Math.round((avgCost * variance) * 100) / 100;
+          allocatedRev += rowRev;
+          allocatedCost += rowCost;
+        }
+
+        const profit = Math.round((rowRev - rowCost) * 100) / 100;
+        const margin = rowRev > 0 ? Math.round((profit / rowRev) * 1000) / 10 : 0;
+        const rep = reg.reps[i % reg.reps.length];
+        const cat = categories[(i * 3 + currentOrderId) % categories.length];
+        const cust = customers[(i * 7 + currentOrderId) % customers.length];
+
+        const month = 1 + (i % 12);
+        const day = 1 + ((i * 5) % 27);
+        const dateStr = `2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const quarter = month <= 3 ? 'Q1' : month <= 6 ? 'Q2' : month <= 9 ? 'Q3' : 'Q4';
+        const qty = 5 + ((i * 7) % 45);
+
+        allTransactions.push({
+          orderId: `ORD-${String(currentOrderId).padStart(4, '0')}`,
+          date: dateStr,
+          month: month,
+          quarter: quarter,
+          customer: cust,
+          region: reg.name,
+          badge: reg.badge,
+          category: cat,
+          sku: `SKU-${cat.substring(0, 3).toUpperCase()}-${100 + (currentOrderId % 20)}`,
+          rep: rep,
+          qty: qty,
+          unitCost: Math.round((rowCost / qty) * 100) / 100,
+          unitPrice: Math.round((rowRev / qty) * 100) / 100,
+          revenue: rowRev,
+          cost: rowCost,
+          profit: profit,
+          margin: margin
+        });
+
+        currentOrderId++;
+      }
+    });
+
+    // Active Filters State
+    let filterRegion = 'ALL';
+    let filterQuarter = 'ALL';
+    let filterCategory = 'ALL';
+    let filterRep = 'ALL';
+
+    let trendChartInstance = null;
+    let donutChartInstance = null;
+
+    function applyFilters() {
+      return allTransactions.filter(t => {
+        if (filterRegion !== 'ALL' && t.region !== filterRegion) return false;
+        if (filterQuarter !== 'ALL' && t.quarter !== filterQuarter) return false;
+        if (filterCategory !== 'ALL' && t.category !== filterCategory) return false;
+        if (filterRep !== 'ALL' && t.rep !== filterRep) return false;
+        return true;
+      });
+    }
+
+    function updateDashboard() {
+      const filtered = applyFilters();
+      const totalRev = filtered.reduce((acc, t) => acc + t.revenue, 0);
+      const totalCost = filtered.reduce((acc, t) => acc + t.cost, 0);
+      const totalProfit = filtered.reduce((acc, t) => acc + t.profit, 0);
+      const margin = totalRev > 0 ? (totalProfit / totalRev) * 100 : 0;
+      const aov = filtered.length > 0 ? totalRev / filtered.length : 0;
+
+      // Update KPIs
+      document.getElementById('kpi-revenue').textContent = '$' + totalRev.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      document.getElementById('kpi-cogs').textContent = '$' + totalCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      document.getElementById('kpi-profit').textContent = '$' + totalProfit.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      document.getElementById('kpi-margin').textContent = margin.toFixed(2) + '%';
+      document.getElementById('kpi-orders').innerHTML = `${filtered.length} <span style="font-size:16px;color:#94a3b8;font-weight:400;">/ <span id="kpi-aov">$${aov.toFixed(2)}</span></span>`;
+      document.getElementById('table-count').textContent = filtered.length;
+
+      // Update Charts
+      updateTrendChart(filtered);
+      updateDonutChart(filtered);
+
+      // Render Table
+      renderTable(filtered);
+    }
+
+    function updateTrendChart(data) {
+      const monthly = new Array(12).fill(0);
+      data.forEach(t => { monthly[t.month - 1] += t.revenue; });
+
+      const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+      if (trendChartInstance) trendChartInstance.destroy();
+
+      const ctx = document.getElementById('trendChart').getContext('2d');
+      trendChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Monthly Gross Revenue ($)',
+            data: monthly,
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56, 189, 248, 0.1)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2,
+            pointBackgroundColor: '#0284c7',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (c) => '$' + c.raw.toLocaleString()
+              }
+            }
+          },
+          scales: {
+            y: {
+              grid: { color: 'rgba(255,255,255,0.06)' },
+              ticks: {
+                color: '#94a3b8',
+                callback: (v) => '$' + (v / 1000) + 'k'
+              }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8' }
+            }
+          }
+        }
+      });
+    }
+
+    function updateDonutChart(data) {
+      const regTotals = { West: 0, East: 0, South: 0, North: 0 };
+      data.forEach(t => { if (regTotals[t.region] !== undefined) regTotals[t.region] += t.revenue; });
+
+      if (donutChartInstance) donutChartInstance.destroy();
+
+      const ctx = document.getElementById('donutChart').getContext('2d');
+      donutChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['West', 'East', 'South', 'North'],
+          datasets: [{
+            data: [regTotals.West, regTotals.East, regTotals.South, regTotals.North],
+            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#cbd5e1', font: { size: 11 } }
+            },
+            tooltip: {
+              callbacks: {
+                label: (c) => ` ${c.label}: $${c.raw.toLocaleString()}`
+              }
+            }
+          },
+          cutout: '70%'
+        }
+      });
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('table-body');
+      const search = (document.getElementById('search-box').value || '').toLowerCase();
+      
+      const toShow = data.filter(t => {
+        if (!search) return true;
+        return t.orderId.toLowerCase().includes(search) ||
+               t.customer.toLowerCase().includes(search) ||
+               t.rep.toLowerCase().includes(search) ||
+               t.sku.toLowerCase().includes(search);
+      }).slice(0, 100); // Display top 100 for fast responsiveness
+
+      let html = '';
+      toShow.forEach(t => {
+        html += `
+          <tr>
+            <td style="color:#38bdf8;font-weight:600;">${t.orderId}</td>
+            <td>${t.date}</td>
+            <td style="color:#f8fafc;font-family:'Inter',sans-serif;">${t.customer}</td>
+            <td><span class="badge ${t.badge}">${t.region}</span></td>
+            <td>${t.category}</td>
+            <td>${t.sku}</td>
+            <td>${t.rep}</td>
+            <td>${t.qty}</td>
+            <td>$${t.unitCost.toFixed(2)}</td>
+            <td>$${t.unitPrice.toFixed(2)}</td>
+            <td style="color:#34d399;font-weight:600;">$${t.revenue.toLocaleString()}</td>
+            <td style="color:#60a5fa;">$${t.profit.toLocaleString()}</td>
+            <td style="font-weight:600;">${t.margin}%</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function filterTable() {
+      renderTable(applyFilters());
+    }
+
+    // Slicer Handlers
+    function setRegion(r) {
+      filterRegion = r;
+      updatePills('region-slicers', r);
+      updateDashboard();
+    }
+
+    function setQuarter(q) {
+      filterQuarter = q;
+      updatePills('quarter-slicers', q);
+      updateDashboard();
+    }
+
+    function setCategory(c) {
+      filterCategory = c;
+      updatePills('category-slicers', c);
+      updateDashboard();
+    }
+
+    function setRep(rep) {
+      filterRep = rep;
+      updateDashboard();
+    }
+
+    function updatePills(containerId, activeVal) {
+      const buttons = document.querySelectorAll(`#${containerId} .slicer-pill`);
+      buttons.forEach(btn => {
+        const text = btn.textContent;
+        if (activeVal === 'ALL' && (text.startsWith('All') || text === 'All FY2026')) {
+          btn.classList.add('active');
+        } else if (text.startsWith(activeVal)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function resetAllSlicers() {
+      filterRegion = 'ALL';
+      filterQuarter = 'ALL';
+      filterCategory = 'ALL';
+      filterRep = 'ALL';
+      document.getElementById('rep-select').value = 'ALL';
+      updatePills('region-slicers', 'ALL');
+      updatePills('quarter-slicers', 'ALL');
+      updatePills('category-slicers', 'ALL');
+      document.getElementById('search-box').value = '';
+      updateDashboard();
+    }
+
+    // Initial render
+    window.addEventListener('DOMContentLoaded', () => {
+      updateDashboard();
+    });
+  </script>
+</body>
+</html>

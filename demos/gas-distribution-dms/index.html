@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Apps Script Distribution Management System — Live Interactive Sandbox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --panel: #131b2e;
+      --card: #1a233a;
+      --border: #283556;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --gas-green: #0f9d58;
+      --gas-blue: #4285f4;
+      --gas-yellow: #f4b400;
+      --gas-red: #db4437;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .ribbon {
+      background: #0f172a;
+      border-bottom: 1px solid var(--border);
+      height: 44px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .ribbon-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 157, 88, 0.15);
+      border: 1px solid rgba(15, 157, 88, 0.4);
+      color: #34d399;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+    .ribbon-tag span {
+      width: 7px; height: 7px; border-radius: 50%; background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+    .ribbon-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-reset { background: #b91c1c; color: #fff; }
+    .btn-reset:hover { background: #dc2626; }
+    .btn-back { background: rgba(255,255,255,0.1); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.2); }
+    .btn-back:hover { background: rgba(255,255,255,0.2); }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 20px;
+      padding: 20px 24px 60px;
+      max-width: 1560px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+    }
+    @media (max-width: 1100px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Sheets Pane */
+    .sheets-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sheets-header {
+      background: #0d1322;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sheets-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+    .sheets-logo {
+      width: 22px;
+      height: 22px;
+      background: #0f9d58;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 13px;
+      color: #fff;
+    }
+    .sheet-tabs {
+      display: flex;
+      background: #090d16;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .sheet-tab {
+      padding: 9px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      background: none;
+      border: none;
+      border-right: 1px solid var(--border);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .sheet-tab:hover { background: #131b2e; color: #f1f5f9; }
+    .sheet-tab.active {
+      background: var(--panel);
+      color: #38bdf8;
+      border-bottom-color: #38bdf8;
+      font-weight: 700;
+    }
+    .sheet-content {
+      padding: 16px;
+      flex: 1;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th {
+      background: #090d16;
+      color: #94a3b8;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    td {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+    }
+    tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+    .ar-font { font-family: 'Cairo', sans-serif !important; }
+
+    /* Execution Console Pane */
+    .console-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .console-header {
+      background: #0d1322;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .console-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+    .action-card {
+      background: #101726;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .action-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .action-card p {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .action-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .form-control {
+      background: #090d16;
+      border: 1px solid var(--border);
+      color: #f1f5f9;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+    }
+    .btn-run {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-run:hover { background: #1d4ed8; }
+
+    /* Live Output Log */
+    .log-terminal {
+      background: #050811;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #10b981;
+      height: 180px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+    .log-line { margin-bottom: 4px; }
+    .log-line.info { color: #38bdf8; }
+    .log-line.warn { color: #f59e0b; }
+    .log-line.error { color: #ef4444; }
+
+    /* Code Inspector */
+    .code-box {
+      background: #080c14;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #cbd5e1;
+      max-height: 180px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Ribbon -->
+  <div class="ribbon">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="ribbon-tag"><span></span> GAS Engine Sandbox</span>
+      <span style="font-size:12px;color:#94a3b8;" class="hidden sm:inline">Google Apps Script V8 Serverless Backend • Relational Sheets Access Layer</span>
+    </div>
+    <div class="ribbon-actions">
+      <button class="btn btn-reset" onclick="resetDemoSheets()">🔄 Reset Google Sheets</button>
+      <a href="../../index.html#projects" class="btn btn-back">← Back to Portfolio</a>
+    </div>
+  </div>
+
+  <!-- Honest Representation & Simulation Disclosure Banner -->
+  <div style="background:rgba(59,130,246,0.12);border-bottom:1px solid rgba(59,130,246,0.25);padding:8px 20px;font-size:12px;color:#93c5fd;display:flex;align-items:center;gap:8px;">
+    <span>ℹ️</span>
+    <span><strong>Simulation Disclosure:</strong> This interactive sandbox simulates Google Apps Script (V8) LockService, atomic document sequence generation (INV-YYYY-XXXX), and Google Sheets relational tables in-browser for portfolio evaluation without requiring Google Account OAuth or altering production client spreadsheets.</span>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- Left: Virtual Google Sheets Database -->
+    <div class="sheets-panel">
+      <div class="sheets-header">
+        <div class="sheets-title">
+          <div class="sheets-logo">田</div>
+          <span>Al_Amal_Distribution_DB (Google Sheets)</span>
+          <span style="font-size:11px;color:#34d399;background:rgba(16,185,129,0.15);padding:2px 6px;border-radius:4px;">Connected</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">
+          SPREADSHEET_ID: 1A9z...8Lk2
+        </div>
+      </div>
+
+      <!-- Sheet Tabs Navigation -->
+      <div class="sheet-tabs">
+        <button class="sheet-tab active" onclick="switchSheet('invoices')">📑 Invoices (<span id="count-invoices">3</span>)</button>
+        <button class="sheet-tab" onclick="switchSheet('customers')">👥 Customers (<span id="count-customers">4</span>)</button>
+        <button class="sheet-tab" onclick="switchSheet('products')">📦 Products (<span id="count-products">4</span>)</button>
+        <button class="sheet-tab" onclick="switchSheet('audit')">🛡️ AuditLog (<span id="count-audit">6</span>)</button>
+      </div>
+
+      <!-- Sheet Grid View -->
+      <div class="sheet-content" id="sheet-table-container">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Right: Interactive GAS Execution Console -->
+    <div class="console-panel">
+      <div class="console-header">
+        <div style="font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;">
+          <span>⚡ Apps Script Execution Console</span>
+          <span style="font-size:10px;background:#1e3a8a;color:#93c5fd;padding:2px 6px;border-radius:4px;">doPost / Execution API</span>
+        </div>
+        <div style="font-size:11px;color:#94a3b8;">Runtime: V8 Engine</div>
+      </div>
+
+      <div class="console-body">
+
+        <!-- Action 1: Create Invoice -->
+        <div class="action-card">
+          <h4>📑 Create Sequential Sales Invoice (Database.gs)</h4>
+          <p>Generates atomic sequence <code>INV-2026-XXXX</code>, locks sheet with <code>LockService.getScriptLock()</code>, checks credit limit, deducts stock, and appends row.</p>
+          <div class="action-form">
+            <select class="form-control" id="inv-customer">
+              <option value="CUST-001">Hyper One Zayed (Limit: 150k)</option>
+              <option value="CUST-002">Metro Mohandessin (Limit: 80k)</option>
+              <option value="CUST-003">Awlad Ragab Roxy (Limit: 75k)</option>
+              <option value="CUST-004">Kazyon Giza (Limit: 50k)</option>
+            </select>
+            <select class="form-control" id="inv-product">
+              <option value="SKU-OIL-01">Crystal Corn Oil 800ml (78 EGP)</option>
+              <option value="SKU-SUG-02">Al Osra White Sugar 1kg (35 EGP)</option>
+              <option value="SKU-PAS-03">Regina Pasta 400g (22 EGP)</option>
+              <option value="SKU-TEA-04">El Arosa Tea 250g (48 EGP)</option>
+            </select>
+            <input type="number" class="form-control" id="inv-qty" placeholder="Quantity (Cartons)" value="20" min="1">
+            <input type="number" class="form-control" id="inv-discount" placeholder="Discount % (0-5)" value="2" min="0" max="5">
+          </div>
+          <button class="btn-run" onclick="executeCreateInvoice()">
+            ▶ Run createInvoice_()
+          </button>
+        </div>
+
+        <!-- Action 2: Record Cash Payment Receipt -->
+        <div class="action-card">
+          <h4>💰 Record Payment Collection (Database.gs)</h4>
+          <p>Registers payment receipt, credits customer account balance, updates invoice status to PAID/PARTIAL, and creates financial entry.</p>
+          <div class="action-form">
+            <select class="form-control" id="pay-customer">
+              <option value="CUST-001">Hyper One Zayed</option>
+              <option value="CUST-002">Metro Mohandessin</option>
+              <option value="CUST-003">Awlad Ragab Roxy</option>
+            </select>
+            <input type="number" class="form-control" id="pay-amount" placeholder="Amount (EGP)" value="15000">
+          </div>
+          <button class="btn-run" style="background:#059669;" onclick="executeRecordPayment()">
+            ▶ Run recordPayment_()
+          </button>
+        </div>
+
+        <!-- Execution Terminal Logs -->
+        <div>
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px;display:flex;justify-content:space-between;">
+            <span>Apps Script Execution Log:</span>
+            <span style="color:#38bdf8;">LockService: IDLE</span>
+          </div>
+          <div class="log-terminal" id="terminal-logs">
+            <div class="log-line info">[INIT] Apps Script V8 Execution Runtime initialized.</div>
+            <div class="log-line info">[CONFIG] Loaded SPREADSHEET_ID from Config.gs</div>
+            <div class="log-line">[READY] Sheet lock acquired & released cleanly. Ready for operations.</div>
+          </div>
+        </div>
+
+        <!-- Gas Code Preview -->
+        <div>
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px;">
+            Target Function Code (Database.gs):
+          </div>
+          <div class="code-box" id="code-preview">
+function createInvoice_(customerCode, sku, quantity, discountPct) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(10000); // 10s concurrency protection
+  try {
+    var invSheet = getSheet_('Invoices');
+    var seq = getNextSequence_('INV');
+    // Calculate total & deduct inventory...
+    invSheet.appendRow([seq, customerCode, sku, quantity, total, 'POSTED', new Date()]);
+    logAudit_('CREATE_INVOICE', seq, Session.getActiveUser().getEmail());
+    return { success: true, invoiceId: seq };
+  } finally {
+    lock.releaseLock();
+  }
+}</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initial Seed Database
+    const initialData = {
+      invoices: [
+        { id: 'INV-2026-0038', customer: 'Hyper One Zayed', sku: 'SKU-OIL-01', qty: 50, total: 3900, status: 'PAID', date: '2026-11-05 10:14' },
+        { id: 'INV-2026-0039', customer: 'Metro Mohandessin', sku: 'SKU-SUG-02', qty: 100, total: 3500, status: 'POSTED', date: '2026-11-06 12:30' },
+        { id: 'INV-2026-0040', customer: 'Awlad Ragab Roxy', sku: 'SKU-PAS-03', qty: 80, total: 1760, status: 'POSTED', date: '2026-11-07 09:15' }
+      ],
+      customers: [
+        { code: 'CUST-001', name: 'هايبر وان - الشيخ زايد', route: 'Giza & Haram', limit: 150000, balance: 94200, status: 'ACTIVE' },
+        { code: 'CUST-002', name: 'مترو ماركت - المهندسين', route: 'Giza Central', limit: 80000, balance: 51300, status: 'ACTIVE' },
+        { code: 'CUST-003', name: 'أولاد رجب - روكسي', route: 'East Cairo', limit: 75000, balance: 46900, status: 'ACTIVE' },
+        { code: 'CUST-004', name: 'كازيون ماركت - فيصل', route: 'Haram West', limit: 50000, balance: 18400, status: 'ACTIVE' }
+      ],
+      products: [
+        { sku: 'SKU-OIL-01', name: 'زيت ذرة كريستال 800مل', price: 78, stock: 450, reorder: 100 },
+        { sku: 'SKU-SUG-02', name: 'سكر الأسرة الأبيض 1كجم', price: 35, stock: 820, reorder: 200 },
+        { sku: 'SKU-PAS-03', name: 'مكرونة ريجينا 400جم', price: 22, stock: 1200, reorder: 300 },
+        { sku: 'SKU-TEA-04', name: 'شاي العروسة 250جم', price: 48, stock: 310, reorder: 80 }
+      ],
+      audit: [
+        { id: 'LOG-101', action: 'SYSTEM_BOOT', user: 'system@alamal.gas', duration: '12ms', time: '2026-11-07 08:00', details: 'Spreadsheet connection established' },
+        { id: 'LOG-102', action: 'AUTH_CHECK', user: 'manager@alamal-eg.com', duration: '34ms', time: '2026-11-07 08:15', details: 'Role verified: MANAGER' },
+        { id: 'LOG-103', action: 'POST_INVOICE', user: 'rep2@alamal-eg.com', duration: '88ms', time: '2026-11-07 09:15', details: 'Generated INV-2026-0040' },
+        { id: 'LOG-104', action: 'RECORD_PAYMENT', user: 'finance@alamal-eg.com', duration: '62ms', time: '2026-11-07 10:20', details: 'Receipt 12,000 EGP for CUST-001' }
+      ]
+    };
+
+    let db = null;
+    let currentActiveSheet = 'invoices';
+
+    function loadDatabase() {
+      const saved = localStorage.getItem('gas_dms_database');
+      if (saved) {
+        try { db = JSON.parse(saved); return; } catch (e) {}
+      }
+      db = JSON.parse(JSON.stringify(initialData));
+      saveDatabase();
+    }
+
+    function saveDatabase() {
+      localStorage.setItem('gas_dms_database', JSON.stringify(db));
+      updateCounts();
+      renderCurrentSheet();
+    }
+
+    function updateCounts() {
+      document.getElementById('count-invoices').textContent = db.invoices.length;
+      document.getElementById('count-customers').textContent = db.customers.length;
+      document.getElementById('count-products').textContent = db.products.length;
+      document.getElementById('count-audit').textContent = db.audit.length;
+    }
+
+    function switchSheet(sheetName) {
+      currentActiveSheet = sheetName;
+      const tabs = document.querySelectorAll('.sheet-tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderCurrentSheet();
+    }
+
+    function renderCurrentSheet() {
+      const container = document.getElementById('sheet-table-container');
+      let html = '';
+
+      if (currentActiveSheet === 'invoices') {
+        html = `
+          <table>
+            <thead>
+              <tr><th>Invoice ID</th><th>Customer Name</th><th>SKU</th><th>Qty (Ctn)</th><th>Total (EGP)</th><th>Status</th><th>Timestamp</th></tr>
+            </thead>
+            <tbody>
+              ${db.invoices.map(r => `
+                <tr>
+                  <td style="color:#38bdf8;font-weight:700;">${r.id}</td>
+                  <td class="ar-font" style="color:#f8fafc;">${r.customer}</td>
+                  <td>${r.sku}</td>
+                  <td>${r.qty}</td>
+                  <td style="color:#34d399;font-weight:600;">${r.total.toLocaleString()} EGP</td>
+                  <td><span style="background:${r.status === 'PAID' ? 'rgba(16,185,129,0.2)' : 'rgba(59,130,246,0.2)'};color:${r.status === 'PAID' ? '#34d399' : '#60a5fa'};padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:700;">${r.status}</span></td>
+                  <td style="color:#94a3b8;">${r.date}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } else if (currentActiveSheet === 'customers') {
+        html = `
+          <table>
+            <thead>
+              <tr><th>Code</th><th>Name (Arabic)</th><th>Assigned Route</th><th>Credit Limit</th><th>Current Balance</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              ${db.customers.map(r => `
+                <tr>
+                  <td style="color:#38bdf8;">${r.code}</td>
+                  <td class="ar-font" style="font-weight:600;">${r.name}</td>
+                  <td>${r.route}</td>
+                  <td>${r.limit.toLocaleString()} EGP</td>
+                  <td style="color:#f59e0b;font-weight:700;">${r.balance.toLocaleString()} EGP</td>
+                  <td><span style="color:#34d399;font-weight:700;">${r.status}</span></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } else if (currentActiveSheet === 'products') {
+        html = `
+          <table>
+            <thead>
+              <tr><th>SKU</th><th>Product Description (Arabic)</th><th>Carton Price</th><th>Warehouse Stock</th><th>Reorder Level</th></tr>
+            </thead>
+            <tbody>
+              ${db.products.map(r => `
+                <tr>
+                  <td style="color:#38bdf8;">${r.sku}</td>
+                  <td class="ar-font">${r.name}</td>
+                  <td style="color:#34d399;font-weight:700;">${r.price} EGP</td>
+                  <td style="color:${r.stock < r.reorder ? '#ef4444' : '#f8fafc'};font-weight:700;">${r.stock} Ctns</td>
+                  <td style="color:#94a3b8;">${r.reorder} Ctns</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } else if (currentActiveSheet === 'audit') {
+        html = `
+          <table>
+            <thead>
+              <tr><th>Log ID</th><th>Action</th><th>Executed By</th><th>Duration</th><th>Timestamp</th><th>Details</th></tr>
+            </thead>
+            <tbody>
+              ${db.audit.slice().reverse().map(r => `
+                <tr>
+                  <td style="color:#94a3b8;">${r.id}</td>
+                  <td style="color:#38bdf8;font-weight:700;">${r.action}</td>
+                  <td>${r.user}</td>
+                  <td style="color:#34d399;">${r.duration}</td>
+                  <td style="color:#94a3b8;">${r.time}</td>
+                  <td class="ar-font">${r.details}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function appendLog(type, msg) {
+      const term = document.getElementById('terminal-logs');
+      const div = document.createElement('div');
+      div.className = `log-line ${type}`;
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      term.appendChild(div);
+      term.scrollTop = term.scrollHeight;
+    }
+
+    function executeCreateInvoice() {
+      const custCode = document.getElementById('inv-customer').value;
+      const custName = document.getElementById('inv-customer').selectedOptions[0].text.split('(')[0].trim();
+      const sku = document.getElementById('inv-product').value;
+      const qty = parseInt(document.getElementById('inv-qty').value) || 10;
+      const disc = parseFloat(document.getElementById('inv-discount').value) || 0;
+
+      appendLog('info', `LockService.getScriptLock().waitLock(10000) -> ACQUIRED`);
+      
+      const prod = db.products.find(p => p.sku === sku);
+      const cust = db.customers.find(c => c.code === custCode);
+
+      if (!prod || !cust) {
+        appendLog('error', `Entity lookup failed for SKU: ${sku}`);
+        return;
+      }
+
+      if (prod.stock < qty) {
+        appendLog('error', `Insufficient Stock: Requested ${qty}, available ${prod.stock}`);
+        return;
+      }
+
+      const gross = prod.price * qty;
+      const net = Math.round(gross * (1 - (disc / 100)));
+      
+      if (cust.balance + net > cust.limit) {
+        appendLog('warn', `CREDIT LIMIT WARNING: Customer balance will exceed limit of ${cust.limit} EGP`);
+      }
+
+      // Decrement stock & increment balance
+      prod.stock -= qty;
+      cust.balance += net;
+
+      // Next sequence
+      const nextSeqNum = 41 + db.invoices.length;
+      const invId = `INV-2026-${String(nextSeqNum).padStart(4, '0')}`;
+      const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
+
+      db.invoices.unshift({
+        id: invId,
+        customer: custName,
+        sku: sku,
+        qty: qty,
+        total: net,
+        status: 'POSTED',
+        date: now
+      });
+
+      db.audit.push({
+        id: `LOG-${100 + db.audit.length}`,
+        action: 'CREATE_INVOICE',
+        user: 'rep_active@alamal.gas',
+        duration: `${Math.floor(45 + Math.random() * 40)}ms`,
+        time: now,
+        details: `Created ${invId} for ${custName} (${net.toLocaleString()} EGP)`
+      });
+
+      saveDatabase();
+      appendLog('', `SUCCESS: Appended row to 'Invoices' sheet -> ID: ${invId}`);
+      appendLog('info', `Inventory decremented (-${qty} ${sku}). LockService RELEASED.`);
+    }
+
+    function executeRecordPayment() {
+      const custCode = document.getElementById('pay-customer').value;
+      const custName = document.getElementById('pay-customer').selectedOptions[0].text;
+      const amount = parseFloat(document.getElementById('pay-amount').value) || 5000;
+
+      appendLog('info', `LockService.getScriptLock() -> ACQUIRED for Payment Posting`);
+      const cust = db.customers.find(c => c.code === custCode);
+
+      if (!cust) {
+        appendLog('error', `Customer not found`);
+        return;
+      }
+
+      cust.balance = Math.max(0, cust.balance - amount);
+      const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
+
+      db.audit.push({
+        id: `LOG-${100 + db.audit.length}`,
+        action: 'COLLECTION_RECEIPT',
+        user: 'cashier@alamal.gas',
+        duration: '52ms',
+        time: now,
+        details: `Received ${amount.toLocaleString()} EGP from ${custName}. New balance: ${cust.balance.toLocaleString()} EGP`
+      });
+
+      saveDatabase();
+      appendLog('', `SUCCESS: Credited ${amount.toLocaleString()} EGP to ${custName}`);
+      appendLog('info', `Audit log recorded. LockService RELEASED.`);
+    }
+
+    function resetDemoSheets() {
+      if (confirm('Reset virtual Google Sheets back to initial seed dataset?')) {
+        localStorage.removeItem('gas_dms_database');
+        loadDatabase();
+        appendLog('warn', '[RESET] Database reverted to default template state.');
+      }
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDatabase();
+      renderCurrentSheet();
+    });
+  </script>
+</body>
+</html>

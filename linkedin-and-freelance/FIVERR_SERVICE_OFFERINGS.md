@@ -14,7 +14,7 @@ On Fiverr and freelance marketplaces, clients seek tangible business outcomes ra
 ---
 
 ## Gig 1: Executive Excel Dashboards & Power Query Financial Models
-**Verified Gig Link:** [https://www.fiverr.com/s/Bb8WZBW](https://www.fiverr.com/s/Bb8WZBW)
+**Verified Gig Link:** [https://www.fiverr.com/s/VrD0ogx](https://www.fiverr.com/s/VrD0ogx)
 
 ### Gig Title:
 > *I will build an executive sales, inventory, and financial Excel dashboard with Power Query*
@@ -77,7 +77,7 @@ On Fiverr and freelance marketplaces, clients seek tangible business outcomes ra
 
 ## Verified Active Service Links
 
-- **Gig 1 (Excel & Business Intelligence):** [https://www.fiverr.com/s/Bb8WZBW](https://www.fiverr.com/s/Bb8WZBW)
+- **Gig 1 (Excel & Business Intelligence):** [https://www.fiverr.com/s/VrD0ogx](https://www.fiverr.com/s/VrD0ogx)
 - **Gig 2 (Cloud Automation & Apps Script):** [https://www.fiverr.com/s/EmrXZg0](https://www.fiverr.com/s/EmrXZg0)
 
 Both links are now embedded directly across:
